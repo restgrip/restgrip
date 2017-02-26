@@ -1,0 +1,13 @@
+.idea
+.phpintel
+nbproject
+.buildpath
+.project
+.settings
+Thumbs.db
+vendor
+composer.phar
+composer.lock
+.DS_Store
+phpunit.phar
+phpunit.xml
