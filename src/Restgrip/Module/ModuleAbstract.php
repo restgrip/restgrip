@@ -36,10 +36,7 @@ abstract class ModuleAbstract implements ModuleInterface
         if (count($this->defaultServices)) {
             foreach ($this->defaultServices as $serviceName) {
                 // https://docs.phalconphp.com/en/latest/reference/di.html#string
-                $this->getDI()->setShared(
-                    $serviceName,
-                    $serviceName
-                );
+                $this->getDI()->setShared($serviceName, $serviceName);
             }
         }
         
@@ -53,6 +50,8 @@ abstract class ModuleAbstract implements ModuleInterface
     }
     
     /**
+     * Setup services which available for both console and http.
+     *
      * @return void
      */
     protected function services()

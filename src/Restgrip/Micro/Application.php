@@ -146,41 +146,10 @@ class Application extends Micro
             }
         );
         
-        $container->setShared(
-            'request',
-            function () {
-                $instance = new Request();
-                
-                return $instance;
-            }
-        );
-        
-        $container->setShared(
-            'response',
-            function () {
-                $instance = new Response();
-                
-                return $instance;
-            }
-        );
-        
-        $container->setShared(
-            'notFoundHandler',
-            function () {
-                $instance = new NotFoundHandler();
-                
-                return $instance;
-            }
-        );
-        
-        $container->setShared(
-            'errorHandler',
-            function () {
-                $instance = new ErrorHandler();
-                
-                return $instance;
-            }
-        );
+        $container->setShared('request', Request::class);
+        $container->setShared('response',Response::class);
+        $container->setShared('notFoundHandler', NotFoundHandler::class);
+        $container->setShared('errorHandler', ErrorHandler::class);
         
         $this->notFound($container->getShared('notFoundHandler'));
         $this->error($container->getShared('errorHandler'));
