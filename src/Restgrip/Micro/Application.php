@@ -3,7 +3,6 @@ namespace Restgrip\Micro;
 
 use Phalcon\Config;
 use Phalcon\Di;
-use Phalcon\DiInterface;
 use Phalcon\Filter;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
@@ -24,11 +23,6 @@ use Restgrip\Router\Router;
 class Application extends Micro
 {
     /**
-     * @var Config
-     */
-    protected $configs;
-    
-    /**
      * Application constructor.
      *
      * @param array    $config
@@ -38,11 +32,10 @@ class Application extends Micro
     {
         $config = new Config($config);
         foreach ($configs as $override) {
-            $config = $config->merge(new Config($override));
+            $config->merge(new Config($override));
         }
         
-        $this->configs = $config;
-        $this->setupContainer($this->configs);
+        $this->setupContainer($config);
     }
     
     /**
@@ -53,28 +46,15 @@ class Application extends Micro
     protected function setupContainer(Config $config)
     {
         $container = new Di();
+        $container->offsetSet('configs', $config);
+        $container->setShared('filter', Filter::class);
+        
         $container->setShared(
             'eventsManager',
             function () {
                 $instance = new EventsManager();
                 $instance->enablePriorities(true);
-                
-                return $instance;
-            }
-        );
-        
-        $container->setShared(
-            'configs',
-            function () use ($config) {
-                return $config;
-            }
-        );
-        
-        $container->setShared(
-            'filter',
-            function () {
-                $instance = new Filter();
-                
+
                 return $instance;
             }
         );
@@ -84,18 +64,21 @@ class Application extends Micro
     }
     
     /**
-     * @param DiInterface $container
+     * Load defined modules
      */
-    protected function loadModules(DiInterface $container)
+    protected function loadModules()
     {
-        /* @var $modules Config */
-        $modules = $this->configs->get('modules', []);
-        if ($modules->count()) {
-            foreach ($modules as $module) {
-                /* @var $module ModuleInterface */
-                $module = $container->getShared($module);
-                $module->register($this);
-            }
+        $modules = $this->getDI()->getShared('configs')->get('modules');
+        if (!$modules) {
+            return;
+        } elseif (!$modules instanceof Config) {
+            return;
+        }
+        
+        foreach ($modules as $module) {
+            /* @var $module ModuleInterface */
+            $module = $this->getDI()->getShared($module);
+            $module->register($this);
         }
     }
     
@@ -105,7 +88,7 @@ class Application extends Micro
      */
     public function serveConsole()
     {
-        $this->loadModules($this->getDI());
+        $this->loadModules();
         
         // This must be instance of symfony console from restgrip extra-modules
         if (!$this->getDI()->has('console')) {
@@ -147,14 +130,14 @@ class Application extends Micro
         );
         
         $container->setShared('request', Request::class);
-        $container->setShared('response',Response::class);
+        $container->setShared('response', Response::class);
         $container->setShared('notFoundHandler', NotFoundHandler::class);
         $container->setShared('errorHandler', ErrorHandler::class);
         
         $this->notFound($container->getShared('notFoundHandler'));
         $this->error($container->getShared('errorHandler'));
         
-        $this->loadModules($container);
+        $this->loadModules();
         
         return $this->handle();
     }
