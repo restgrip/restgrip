@@ -50,9 +50,16 @@ class RouterEventListener
                 $data = $request->getQuery();
                 break;
             case 'POST':
-            case 'PUT':
-            case 'PATCH':
                 $data = $request->getPost();
+                if ($request->hasFiles()) {
+                    $data = array_merge($data, $this->getFiles($request->getUploadedFiles(true)));
+                }
+                break;
+            case 'PUT':
+                $data = $request->getPut();
+                if ($request->hasFiles()) {
+                    $data = array_merge($data, $this->getFiles($request->getUploadedFiles(true)));
+                }
                 break;
             default:
                 $data = [];
@@ -84,5 +91,35 @@ class RouterEventListener
         
         // now set back route validation with validated validation object
         $route->setValidation($validationClass);
+    }
+    
+    /**
+     * Extract file data for Phalcon validation
+     *
+     * @param array $uploadedFiles
+     *
+     * @return array
+     */
+    private function getFiles(array $uploadedFiles) : array
+    {
+        $data = [];
+        if (!count($uploadedFiles)) {
+            return $data;
+        }
+        
+        /* @var $file Request\File */
+        foreach ($uploadedFiles as $file) {
+            $data[$file->getKey()] = [
+                // this required for Phalcon File validator
+                'name'      => $file->getName(),
+                'type'      => $file->getRealType(),
+                'size'      => $file->getSize(),
+                'tmp_name'  => $file->getTempName(),
+                'error'     => $file->getError(),
+                'extension' => $file->getExtension(),
+            ];
+        }
+        
+        return $data;
     }
 }
