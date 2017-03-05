@@ -1,7 +1,7 @@
 {
-    "name": "simukti/restgrip",
+    "name": "restgrip/restgrip",
     "description": "Restgrip is opiniated framework to build mainly for modular API on-top-of Phalcon v3 micro and PHP 7.",
-    "homepage": "https://github.com/simukti/restgrip",
+    "homepage": "https://github.com/restgrip/restgrip",
     "authors": [
         {
             "name": "Sarjono Mukti Aji",
