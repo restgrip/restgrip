@@ -13,8 +13,8 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.0.0,<7.1.0",
-        "ext-phalcon": ">=3.0.0,<3.2.0",
+        "php": ">=7.1.0,<7.2.0",
+        "ext-phalcon": ">=3.2.0,<3.3.0",
         "ext-mbstring": "*"
     },
     "autoload": {
