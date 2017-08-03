@@ -17,6 +17,7 @@ use Restgrip\Router\RouteCollection;
 use Restgrip\Router\Router;
 
 /**
+ * @method Router getRouter()
  * @package   Restgrip\Micro
  * @author    Sarjono Mukti Aji <me@simukti.net>
  */
@@ -54,7 +55,7 @@ class Application extends Micro
             function () {
                 $instance = new EventsManager();
                 $instance->enablePriorities(true);
-
+                
                 return $instance;
             }
         );
@@ -140,6 +141,20 @@ class Application extends Micro
         $this->loadModules();
         
         return $this->handle();
+    }
+    
+    /**
+     * @param string|null $uri
+     *
+     * @return mixed
+     */
+    public function handle($uri = null)
+    {
+        // Router called here, because if no routes mounted it will not throw :
+        // \Phalcon\Mvc\Micro\Exception "Matched route doesn't have an associated handler"
+        $this->getRouter();
+        
+        return parent::handle($uri);
     }
     
     /**
