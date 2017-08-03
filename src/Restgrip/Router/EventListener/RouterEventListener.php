@@ -5,7 +5,8 @@ use Phalcon\Events\Event;
 use Phalcon\Http\Request;
 use Phalcon\Validation\Message;
 use Restgrip\Exception\InputValidationException;
-use Restgrip\Router\Route;
+use Phalcon\Mvc\Router\Route;
+use Restgrip\Router\Route as RestgripRoute;
 use Restgrip\Router\Router;
 use Restgrip\Validation\Validation;
 
@@ -26,6 +27,10 @@ class RouterEventListener
      */
     public function matchedRoute(Event $event, Router $router, Route $route)
     {
+        if (!$route instanceof RestgripRoute) {
+            return;
+        }
+        
         unset($event);
         
         $validationClass = $route->getValidation();
