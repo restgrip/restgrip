@@ -17,6 +17,7 @@ use Restgrip\Router\RouteCollection;
 use Restgrip\Router\Router;
 
 /**
+ * @method EventsManager getEventsManager()
  * @method Router getRouter()
  * @package   Restgrip\Micro
  * @author    Sarjono Mukti Aji <me@simukti.net>
@@ -130,7 +131,7 @@ class Application extends Micro
                  * @link https://docs.phalconphp.com/en/latest/reference/events.html#listener-priorities
                  */
                 $evm = $container->getShared('eventsManager');
-                $evm->attach('router', new RouterEventListener(), 10000);
+                $evm->attach('router', new RouterEventListener());
                 $instance->setEventsManager($evm);
                 
                 return $instance;
