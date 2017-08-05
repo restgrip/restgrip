@@ -217,10 +217,10 @@ class Application extends Micro
                 $subHandler      = $handler[2];
                 $name            = $handler[3] ?? '';
                 $validationClass = $handler[4] ?? null;
-                $visible         = $handler[5] ?? true;
-                $auth            = $handler[6] ?? null;
-                $scope           = $handler[7] ?? null;
-                $role            = $handler[8] ?? null;
+                $auth            = $handler[5] ?? null;
+                $scope           = $handler[6] ?? null;
+                $role            = $handler[7] ?? null;
+                $visible         = $handler[8] ?? true;
                 
                 $actionClass = $lazyHandler;
                 if ($collection->isLazy()) {
