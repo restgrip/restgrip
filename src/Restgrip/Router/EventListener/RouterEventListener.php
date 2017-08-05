@@ -6,8 +6,9 @@ use Phalcon\Http\Request;
 use Phalcon\Validation\Message;
 use Restgrip\Exception\InputValidationException;
 use Phalcon\Mvc\Router\Route;
+use Phalcon\Mvc\Router;
 use Restgrip\Router\Route as RestgripRoute;
-use Restgrip\Router\Router;
+use Restgrip\Router\Router as RestgripRouter;
 use Restgrip\Validation\Validation;
 
 /**
@@ -27,7 +28,7 @@ class RouterEventListener
      */
     public function matchedRoute(Event $event, Router $router, Route $route)
     {
-        if (!$route instanceof RestgripRoute) {
+        if (!$router instanceof RestgripRouter && !$route instanceof RestgripRoute) {
             return;
         }
         
