@@ -17,6 +17,7 @@ use Restgrip\Router\RouteCollection;
 use Restgrip\Router\Router;
 
 /**
+ * @method EventsManager getEventsManager()
  * @method Router getRouter()
  * @package   Restgrip\Micro
  * @author    Sarjono Mukti Aji <me@simukti.net>
@@ -69,6 +70,9 @@ class Application extends Micro
      */
     protected function loadModules()
     {
+        $evm = $this->getEventsManager();
+        $evm->fire('application:beforeLoadModules', $this);
+        
         $modules = $this->getDI()->getShared('configs')->get('modules');
         if (!$modules) {
             return;
@@ -81,6 +85,8 @@ class Application extends Micro
             $module = $this->getDI()->getShared($module);
             $module->register($this);
         }
+        
+        $evm->fire('application:afterLoadModules', $this);
     }
     
     /**
@@ -89,6 +95,8 @@ class Application extends Micro
      */
     public function serveConsole()
     {
+        $this->getEventsManager()->fire('application:beforeServeConsole', $this);
+        
         $this->loadModules();
         
         // This must be instance of symfony console from restgrip extra-modules
@@ -123,7 +131,7 @@ class Application extends Micro
                  * @link https://docs.phalconphp.com/en/latest/reference/events.html#listener-priorities
                  */
                 $evm = $container->getShared('eventsManager');
-                $evm->attach('router', new RouterEventListener(), 10000);
+                $evm->attach('router', new RouterEventListener());
                 $instance->setEventsManager($evm);
                 
                 return $instance;
@@ -137,6 +145,8 @@ class Application extends Micro
         
         $this->notFound($container->getShared('notFoundHandler'));
         $this->error($container->getShared('errorHandler'));
+        
+        $this->getEventsManager()->fire('application:beforeServeHttp', $this);
         
         $this->loadModules();
         

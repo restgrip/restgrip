@@ -25,7 +25,9 @@ class ErrorHandler implements InjectionAwareInterface
     {
         $errorCode = $exception->getCode();
         $message   = $exception->getMessage();
-        $content   = [];
+        $content   = [
+            'success' => false,
+        ];
         
         if ($exception instanceof RestgripException) {
             $content['code']    = $exception->getSubcode();
