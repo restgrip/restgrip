@@ -27,21 +27,21 @@ class RouteCollection extends BaseRouteCollection
      * @param string      $handlerMethod Method name inside controller
      * @param string      $name          Route unique name
      * @param null|string $validator     Validator FQDN classname
-     * @param bool        $visible       Visibility for api documentation
      * @param string      $auth          Required authentication type
      * @param string      $scope         Required authentication scope
      * @param string      $role          Required authentication role
+     * @param bool        $visible       Visibility for api documentation
      */
     public function addRoute(
         string $httpMethod,
         string $path,
         string $handlerMethod,
         string $name,
-        $validator = null,
-        bool $visible = true,
-        string $auth = null,
-        string $scope = null,
-        string $role = null
+        ?string $validator = null,
+        ?string $auth = null,
+        ?string $scope = null,
+        ?string $role = null,
+        ?bool $visible = true
     ) {
         $this->_handlers[] = [
             strtoupper($httpMethod),
@@ -49,10 +49,10 @@ class RouteCollection extends BaseRouteCollection
             $handlerMethod,
             $name,
             $validator,
-            $visible,
             $auth,
             $scope,
             $role,
+            $visible,
         ];
     }
 }
