@@ -78,8 +78,10 @@ class RouterEventListener
         if (count($messages)) {
             $error = [];
             foreach ($messages as $message) {
-                $error[$message->getField()] = ucfirst(
-                    str_replace('Field '.$message->getField().' ', '', $message->getMessage())
+                $error[$message->getField()] = str_replace(
+                    'Field '.$message->getField().' ',
+                    '',
+                    $message->getMessage()
                 );
             }
             
