@@ -70,7 +70,7 @@ class Application extends Micro
     protected function loadModules()
     {
         $evm = $this->getEventsManager();
-        $evm->attach('application:beforeLoadModules', $this);
+        $evm->fire('application:beforeLoadModules', $this);
         
         $modules = $this->getDI()->getShared('configs')->get('modules');
         if (!$modules) {
@@ -85,7 +85,7 @@ class Application extends Micro
             $module->register($this);
         }
         
-        $evm->attach('application:afterLoadModules', $this);
+        $evm->fire('application:afterLoadModules', $this);
     }
     
     /**
@@ -94,7 +94,7 @@ class Application extends Micro
      */
     public function serveConsole()
     {
-        $this->getEventsManager()->attach('application:beforeServeConsole', $this);
+        $this->getEventsManager()->fire('application:beforeServeConsole', $this);
         
         $this->loadModules();
         
@@ -144,8 +144,8 @@ class Application extends Micro
         
         $this->notFound($container->getShared('notFoundHandler'));
         $this->error($container->getShared('errorHandler'));
-    
-        $this->getEventsManager()->attach('application:beforeServeHttp', $this);
+        
+        $this->getEventsManager()->fire('application:beforeServeHttp', $this);
         
         $this->loadModules();
         
